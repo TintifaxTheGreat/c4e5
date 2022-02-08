@@ -2,7 +2,6 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
-	"log"
 )
 
 func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
@@ -21,7 +20,6 @@ func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
 		isCapture := testCapture(child, board)
 		unapplyFunc := board.Apply(child)
 		if (depth == 1) && isCapture {
-			log.Println("entering q move ", child.String())
 			value = -quiescense(board, depth-1+QDEPTH, -beta, -alpha)
 		} else {
 			value = -negamax(board, depth-1, -beta, -alpha)
