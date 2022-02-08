@@ -14,7 +14,7 @@ func main() {
 	log.SetOutput(file)
 	log.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmicroseconds)
 
-	log.Println("log file created")
+	log.Println("engine started")
 
 	cmd.Execute()
 }
