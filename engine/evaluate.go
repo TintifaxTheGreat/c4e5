@@ -14,14 +14,14 @@ const SAFE_KING uint64 = 0xc3000000000000c3
 const GOOD_BISHOP uint64 = 0x42006666004200
 const BASE_LINE uint64 = 0xff000000000000ff
 
-func evaluate(b dragontoothmg.Board) int {
+func evaluate(b *dragontoothmg.Board) int {
 	var value int = 0
 
 	value += bits.OnesCount64(b.White.Pawns&CENT_0) * 4
 	value -= bits.OnesCount64(b.Black.Pawns&CENT_0) * 4
 
-	value += bits.OnesCount64(b.White.Pawns&CENT_1) * 2
-	value -= bits.OnesCount64(b.Black.Pawns&CENT_1) * 2
+	value += bits.OnesCount64(b.White.Pawns & CENT_1)
+	value -= bits.OnesCount64(b.Black.Pawns & CENT_1)
 
 	value += bits.OnesCount64(b.White.Pawns) * 20
 	value -= bits.OnesCount64(b.Black.Pawns) * 20
@@ -45,10 +45,10 @@ func evaluate(b dragontoothmg.Board) int {
 	value -= bits.OnesCount64(b.White.Queens & CENTER)
 	value += bits.OnesCount64(b.Black.Queens & CENTER)
 
-	value -= bits.OnesCount64(b.White.Knights&BASE_LINE) * 2
-	value += bits.OnesCount64(b.Black.Knights&BASE_LINE) * 2
-	value -= bits.OnesCount64(b.White.Bishops&BASE_LINE) * 2
-	value += bits.OnesCount64(b.Black.Bishops&BASE_LINE) * 2
+	value -= bits.OnesCount64(b.White.Knights & BASE_LINE)
+	value += bits.OnesCount64(b.Black.Knights & BASE_LINE)
+	value -= bits.OnesCount64(b.White.Bishops & BASE_LINE)
+	value += bits.OnesCount64(b.Black.Bishops & BASE_LINE)
 
 	value += bits.OnesCount64(b.White.Kings&SAFE_KING) * 5
 	value -= bits.OnesCount64(b.Black.Kings&SAFE_KING) * 5
