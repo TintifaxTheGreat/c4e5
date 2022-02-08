@@ -8,10 +8,7 @@ import (
 var game *engine.Game
 
 func Execute() {
-	game = &engine.Game{
-		Fen:     "",
-		Playing: true,
-	}
+	game = engine.NewGame("")
 
 	var shell *ishell.Shell
 	shell = ishell.New()

@@ -7,8 +7,10 @@ import (
 func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
 	children := board.GenerateLegalMoves()
 	if len(children) == 0 {
-		return -40000 - depth
-		// TODO consider draws
+		if board.OurKingInCheck() == true {
+			return -40000 - depth
+		}
+		return 0
 	}
 
 	if depth < 1 {
@@ -20,7 +22,7 @@ func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
 		isCapture := testCapture(child, board)
 		unapplyFunc := board.Apply(child)
 		if (depth == 1) && isCapture {
-			value = -quiescense(board, depth-1+QDEPTH, -beta, -alpha)
+			value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
 		} else {
 			value = -negamax(board, depth-1, -beta, -alpha)
 		}
