@@ -20,7 +20,8 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	priorValues := make(map[dragontoothmg.Move]int)
 	for _, move := range moves {
 		unapplyFunc := g.Board.Apply(move)
-		priorValues[move] = -evaluate(&g.Board)
+		//priorValues[move] = -evaluate(&g.Board)
+		priorValues[move] = -negamax(&g.Board, 2, -beta, -alpha)
 		unapplyFunc()
 	}
 
@@ -29,7 +30,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		keys = append(keys, key)
 	}
 	sort.Slice(keys, func(i, j int) bool {
-		// TODO order checks first
 		return priorValues[keys[i]] > priorValues[keys[j]]
 	})
 
