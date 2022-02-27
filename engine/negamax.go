@@ -46,18 +46,20 @@ func quiescense(board *dragontoothmg.Board, depth int, alpha int, beta int) int 
 		// TODO consider draws
 	}
 
+	staticValue := evaluate(board)
+
 	if depth < 1 {
-		return evaluate(board)
+		return staticValue
 	}
 
+	var unapplyFunc func()
 	for _, child := range children {
 		value := 0
-		if !testCapture(child, board) {
-			//continue
-			value = evaluate(board)
+		if testCapture(child, board) {
+			value = staticValue
 		} else {
-			unapplyFunc := board.Apply(child)
-			value = -quiescense(board, depth-1, -beta, -alpha)
+			unapplyFunc = board.Apply(child)
+			value = -evaluate(board)
 			unapplyFunc()
 		}
 

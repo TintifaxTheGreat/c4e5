@@ -12,15 +12,16 @@ const cbCenter1 uint64 = 0x00003c24243c0000
 const cbCenter0 uint64 = 0x0000001818000000
 const cbSafeKing uint64 = 0xc3000000000000c3
 const cbGoodBishop uint64 = 0x42006666004200
-const cbGoodPawn uint64 = 0x1c1c000000
+
+//const cbGoodPawn uint64 = 0x1c1c000000
 const cbBaseLine uint64 = 0xff000000000000ff
 
 func evaluate(b *dragontoothmg.Board) int {
 	var value int = 0
 	piecesCount := bits.OnesCount64(b.White.All | b.Black.All)
 
-	value += bits.OnesCount64(b.White.Pawns&cbGoodPawn) * 2
-	value -= bits.OnesCount64(b.Black.Pawns&cbGoodPawn) * 2
+	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 2
+	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 2
 
 	value += bits.OnesCount64(b.White.Pawns) * 20
 	value -= bits.OnesCount64(b.Black.Pawns) * 20
@@ -28,11 +29,11 @@ func evaluate(b *dragontoothmg.Board) int {
 	value += bits.OnesCount64(b.White.Knights) * 60
 	value -= bits.OnesCount64(b.Black.Knights) * 60
 
-	value += bits.OnesCount64(b.White.Bishops) * 61
-	value -= bits.OnesCount64(b.Black.Bishops) * 61
+	value += bits.OnesCount64(b.White.Bishops) * 62
+	value -= bits.OnesCount64(b.Black.Bishops) * 62
 
-	value += bits.OnesCount64(b.White.Rooks) * 100
-	value -= bits.OnesCount64(b.Black.Rooks) * 100
+	value += bits.OnesCount64(b.White.Rooks) * 95
+	value -= bits.OnesCount64(b.Black.Rooks) * 95
 
 	value += bits.OnesCount64(b.White.Queens) * 180
 	value -= bits.OnesCount64(b.Black.Queens) * 180
@@ -40,23 +41,23 @@ func evaluate(b *dragontoothmg.Board) int {
 	value += bits.OnesCount64(b.White.Rooks&OpenFiles(b)) * 2
 	value -= bits.OnesCount64(b.Black.Rooks&OpenFiles(b)) * 2
 
-	if piecesCount < 20 {
-		value += bits.OnesCount64(b.White.Knights & cbCenter)
-		value -= bits.OnesCount64(b.Black.Knights & cbCenter)
+	//TODO Rook on half open line
 
-		value -= bits.OnesCount64(b.White.Queens & cbCenter)
-		value += bits.OnesCount64(b.Black.Queens & cbCenter)
+	value -= bits.OnesCount64(b.White.Knights&cbBoard0) * 3 //TODO
+	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 3
 
-		value -= bits.OnesCount64(b.White.Knights & cbBaseLine)
-		value += bits.OnesCount64(b.Black.Knights & cbBaseLine)
-		value -= bits.OnesCount64(b.White.Bishops & cbBaseLine)
-		value += bits.OnesCount64(b.Black.Bishops & cbBaseLine)
+	if piecesCount > 20 {
+		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 4
+		value += bits.OnesCount64(b.Black.Queens&cbCenter) * 4
 
-		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 7
-		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 7
+		value -= bits.OnesCount64(b.White.Bishops&cbBaseLine) * 3 //TODO
+		value += bits.OnesCount64(b.Black.Bishops&cbBaseLine) * 3
 
-		value += bits.OnesCount64(b.White.Bishops & cbGoodBishop)
-		value -= bits.OnesCount64(b.Black.Bishops & cbGoodBishop)
+		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 20
+		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 20
+
+		value += bits.OnesCount64(b.White.Bishops&cbGoodBishop) * 2
+		value -= bits.OnesCount64(b.Black.Bishops&cbGoodBishop) * 2
 	}
 
 	bbDefendingKing := b.White.Kings
