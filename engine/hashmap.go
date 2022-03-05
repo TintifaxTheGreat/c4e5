@@ -1,10 +1,14 @@
 package engine
 
-import "github.com/dylhunn/dragontoothmg"
+import (
+	"github.com/dylhunn/dragontoothmg"
+)
 
 type Hash struct {
 	depth int
 	value int
+	white bool
+	bool
 }
 
 type HashMap map[uint64]*Hash
@@ -15,7 +19,11 @@ func NewHashMap() *HashMap {
 }
 func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board) {
 	key := b.Hash()
-	h[key] = &Hash{depth: depth, value: value}
+	h[key] = &Hash{
+		depth: depth,
+		value: value,
+		white: b.Wtomove,
+	}
 }
 
 func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, bool) {
@@ -25,7 +33,11 @@ func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, bool) {
 		ok = false
 	}
 	if ok {
-		return hash.value, true
+		v := hash.value
+		if b.Wtomove != hash.white {
+			v *= -1
+		}
+		return v, true
 	}
 	return 0, false
 }

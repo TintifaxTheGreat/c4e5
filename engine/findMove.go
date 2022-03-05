@@ -2,6 +2,7 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
+	"log"
 	"sort"
 )
 
@@ -18,7 +19,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	beta := maxInt
 
 	var bestMove dragontoothmg.Move = 0
-	var sortedMoves []dragontoothmg.Move
+	//var sortedMoves []dragontoothmg.Move
 
 	curDepth := 1
 	for curDepth <= g.Depth {
@@ -39,7 +40,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		// TODO consider winning move
 
-		sortedMoves = make([]dragontoothmg.Move, 0, len(priorValues))
+		sortedMoves := make([]dragontoothmg.Move, 0, len(priorValues))
 		for key := range priorValues {
 			sortedMoves = append(sortedMoves, key)
 		}
@@ -50,6 +51,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		bestMove = sortedMoves[0]
 		moves = sortedMoves
 		curDepth++
+		log.Print(bestMove.String())
 	}
 
 	if bestMove == 0 {
