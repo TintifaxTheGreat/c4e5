@@ -19,57 +19,17 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 
 	for _, child := range children {
 		value := 0
-		isCapture := testCapture(child, board)
+		//isCapture := testCapture(child, board)
 		unapplyFunc := board.Apply(child)
 
 		v, ok := hashmap.Get(depth, board)
 		if ok {
 			value = v
 		} else {
-
-			if (depth == 1) && isCapture {
-				value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha) //TODO change this
-			} else {
-				value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-			}
+			value = -negamax(board, hashmap, depth-1, -beta, -alpha)
 			hashmap.Put(depth, value, board)
 		}
 		unapplyFunc()
-
-		if value >= beta {
-			return beta
-		}
-		if value > alpha {
-			alpha = value
-		}
-	}
-	return alpha
-}
-
-func quiescense(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
-	// TODO fix this
-	children := board.GenerateLegalMoves()
-	if len(children) == 0 {
-		return -40000 - depth
-		// TODO consider draws
-	}
-
-	staticValue := evaluate(board)
-
-	if depth < 1 {
-		return staticValue
-	}
-
-	var unapplyFunc func()
-	for _, child := range children {
-		value := 0
-		if testCapture(child, board) {
-			value = staticValue
-		} else {
-			unapplyFunc = board.Apply(child)
-			value = -evaluate(board)
-			unapplyFunc()
-		}
 
 		if value >= beta {
 			return beta

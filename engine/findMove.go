@@ -25,7 +25,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		priorValues := make(map[dragontoothmg.Move]int)
 
-		for i, move := range moves {
+		for _, move := range moves {
 			unapplyFunc := g.Board.Apply(move)
 			v, ok := g.HashMap.Get(curDepth, &g.Board)
 			if ok {
