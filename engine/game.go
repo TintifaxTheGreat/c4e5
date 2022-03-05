@@ -10,6 +10,7 @@ type Game struct {
 	QuietDepth int
 	Board      dragontoothmg.Board
 	Playing    bool
+	HashMap    *HashMap
 }
 
 func NewGame(fen string) *Game {
@@ -21,5 +22,6 @@ func NewGame(fen string) *Game {
 		QuietDepth: initQuietDepth,
 		Board:      dragontoothmg.ParseFen(fen),
 		Playing:    true,
+		HashMap:    NewHashMap(),
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
+func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int, beta int) int {
 	children := board.GenerateLegalMoves()
 	if len(children) == 0 {
 		if board.OurKingInCheck() == true {
@@ -21,10 +21,18 @@ func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
 		value := 0
 		isCapture := testCapture(child, board)
 		unapplyFunc := board.Apply(child)
-		if (depth == 1) && isCapture {
-			value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
+
+		v, ok := hashmap.Get(depth, board)
+		if ok {
+			value = v
 		} else {
-			value = -negamax(board, depth-1, -beta, -alpha)
+
+			if (depth == 1) && isCapture {
+				value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha) //TODO change this
+			} else {
+				value = -negamax(board, hashmap, depth-1, -beta, -alpha)
+			}
+			hashmap.Put(depth, value, board)
 		}
 		unapplyFunc()
 
@@ -36,10 +44,10 @@ func negamax(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
 		}
 	}
 	return alpha
-
 }
 
 func quiescense(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
+	// TODO fix this
 	children := board.GenerateLegalMoves()
 	if len(children) == 0 {
 		return -40000 - depth
