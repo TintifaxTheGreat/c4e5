@@ -22,12 +22,12 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 		//isCapture := testCapture(child, board)
 		unapplyFunc := board.Apply(child)
 
-		v, ok := hashmap.Get(depth, board)
+		v, ok := hashmap.Get(depth-1, board)
 		if ok {
 			value = v
 		} else {
 			value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-			hashmap.Put(depth, value, board)
+			hashmap.Put(depth-1, value, board)
 		}
 		unapplyFunc()
 

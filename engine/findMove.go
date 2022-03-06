@@ -19,7 +19,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	beta := maxInt
 
 	var bestMove dragontoothmg.Move = 0
-	//var sortedMoves []dragontoothmg.Move
+	//var sortedMoves []dragontoothmg.Move TODO
 
 	curDepth := 1
 	for curDepth <= g.Depth {
@@ -31,6 +31,11 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			v, ok := g.HashMap.Get(curDepth, &g.Board)
 			if ok {
 				priorValues[move] = v
+				foo := -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha) //TODO
+				if v != foo {
+					log.Print(move.String(), " storedValue ", v, " calculated value ", foo)
+				}
+
 			} else {
 				priorValues[move] = -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha)
 				g.HashMap.Put(curDepth, priorValues[move], &g.Board)
@@ -51,7 +56,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		bestMove = sortedMoves[0]
 		moves = sortedMoves
 		curDepth++
-		log.Print(bestMove.String())
 	}
 
 	if bestMove == 0 {
