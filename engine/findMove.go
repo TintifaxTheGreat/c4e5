@@ -2,7 +2,6 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
-	"log"
 	"sort"
 )
 
@@ -21,25 +20,14 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	var bestMove dragontoothmg.Move = 0
 	//var sortedMoves []dragontoothmg.Move TODO
 
-	curDepth := 1
+	curDepth := 0
 	for curDepth <= g.Depth {
 
 		priorValues := make(map[dragontoothmg.Move]int)
 
 		for _, move := range moves {
 			unapplyFunc := g.Board.Apply(move)
-			v, ok := g.HashMap.Get(curDepth, &g.Board)
-			if ok {
-				priorValues[move] = v
-				foo := -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha) //TODO
-				if v != foo {
-					log.Print(move.String(), " storedValue ", v, " calculated value ", foo)
-				}
-
-			} else {
-				priorValues[move] = -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha)
-				g.HashMap.Put(curDepth, priorValues[move], &g.Board)
-			}
+			priorValues[move] = -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha)
 			unapplyFunc()
 		}
 
