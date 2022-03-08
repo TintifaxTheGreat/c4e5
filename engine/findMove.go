@@ -9,6 +9,8 @@ const maxInt int = 1000000
 const minInt int = -1000000
 
 func (g *Game) FindMove() dragontoothmg.Move {
+	hashmap := NewHashMap() // TODO think if this is wise
+
 	moves := g.Board.GenerateLegalMoves()
 	if len(moves) == 1 {
 		return moves[0]
@@ -27,7 +29,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		for _, move := range moves {
 			unapplyFunc := g.Board.Apply(move)
-			priorValues[move] = -negamax(&g.Board, g.HashMap, curDepth, -beta, -alpha)
+			priorValues[move] = -negamax(&g.Board, hashmap, curDepth, -beta, -alpha)
 			unapplyFunc()
 		}
 
@@ -49,7 +51,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	if bestMove == 0 {
 		panic("no move found")
 	}
-
 	return bestMove
 
 }
