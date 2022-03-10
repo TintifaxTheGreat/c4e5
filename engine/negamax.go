@@ -8,30 +8,57 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 	children := board.GenerateLegalMoves()
 	if len(children) == 0 {
 		if board.OurKingInCheck() == true {
-			return -40000 - depth
+			value := -40000 - depth
+			hashmap.Put(depth, value, board)
+			return value
 		}
+		hashmap.Put(depth, 0, board)
 		return 0
 	}
 
 	if depth < 1 {
-		return evaluate(board)
+		value := evaluate(board)
+		hashmap.Put(0, value, board)
+		return value
 	}
 
+	pvs := true
 	for _, child := range children {
 		value := 0
 		isCapture := testCapture(child, board)
-		unapplyFunc := board.Apply(child)
 
-		v, ok := hashmap.Get(depth-1, board)
+		unapplyFunc := board.Apply(child)
+		v, ok := hashmap.Get(depth, board)
+
 		if ok {
-			value = v
+			value = -v
+
+			//a := alpha
+
+			//value_calc := -negamax(board, hashmap, depth-1, -maxInt, -minInt)
+			/*
+				if value != value_calc {
+					log.Print(board.ToFen(), " ", value, " ", value_calc, " ", depth-1)
+				}
+
+			*/
 		} else {
 			if (depth == 1) && isCapture {
 				value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
 			} else {
-				value = -negamax(board, hashmap, depth-1, -beta, -alpha)
+				if pvs {
+					value = -negamax(board, hashmap, depth-1, -beta, -alpha)
+					hashmap.Put(depth-1, value, board)
+				} else {
+					value = -negamax(board, hashmap, depth-1, -alpha-1, -alpha)
+					if value > alpha {
+						value = -negamax(board, hashmap, depth-1, -beta, -alpha)
+						hashmap.Put(depth-1, value, board)
+					}
+				}
+
 			}
-			hashmap.Put(depth-1, value, board)
+
 		}
 		unapplyFunc()
 
@@ -40,7 +67,9 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 		}
 		if value > alpha {
 			alpha = value
+			pvs = false
 		}
+
 	}
 	return alpha
 }

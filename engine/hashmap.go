@@ -8,7 +8,6 @@ type Hash struct {
 	depth int
 	value int
 	white bool
-	bool
 }
 
 type HashMap map[uint64]*Hash

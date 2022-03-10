@@ -2,7 +2,7 @@ package engine
 
 import "github.com/dylhunn/dragontoothmg"
 
-const initDepth = 4
+const initDepth = 5
 const initQuietDepth = 3
 
 type Game struct {
