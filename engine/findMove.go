@@ -33,8 +33,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			unapplyFunc()
 		}
 
-		// TODO consider winning move
-
 		sortedMoves := make([]dragontoothmg.Move, 0, len(priorValues))
 		for key := range priorValues {
 			sortedMoves = append(sortedMoves, key)

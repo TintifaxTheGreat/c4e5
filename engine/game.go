@@ -10,9 +10,6 @@ type Game struct {
 	QuietDepth int
 	Board      dragontoothmg.Board
 	Playing    bool
-	//HashMap    *HashMap
-	cacheHit  uint64 //TODO remove this
-	cacheMiss uint64
 }
 
 func NewGame(fen string) *Game {
