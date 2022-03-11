@@ -45,7 +45,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		bestMove = sortedMoves[0]
 		moves = sortedMoves
-		curDepth++
+		curDepth += 2 // TODO think about this
 	}
 
 	if bestMove == 0 {

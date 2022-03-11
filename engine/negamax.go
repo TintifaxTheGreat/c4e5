@@ -32,16 +32,6 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 
 		if ok {
 			value = -v
-
-			//a := alpha
-
-			//value_calc := -negamax(board, hashmap, depth-1, -maxInt, -minInt)
-			/*
-				if value != value_calc {
-					log.Print(board.ToFen(), " ", value, " ", value_calc, " ", depth-1)
-				}
-
-			*/
 		} else {
 			if (depth == 1) && isCapture {
 				value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
@@ -56,9 +46,7 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 						hashmap.Put(depth-1, value, board)
 					}
 				}
-
 			}
-
 		}
 		unapplyFunc()
 
