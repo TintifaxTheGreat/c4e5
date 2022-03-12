@@ -9,10 +9,10 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 	if len(children) == 0 {
 		if board.OurKingInCheck() == true {
 			value := -40000 - depth
-			hashmap.Put(depth, value, board)
+			hashmap.Put(999, value, board)
 			return value
 		}
-		hashmap.Put(depth, 0, board)
+		hashmap.Put(999, 0, board)
 		return 0
 	}
 
@@ -38,12 +38,11 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 			} else {
 				if pvs {
 					value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-					hashmap.Put(depth-1, value, board)
+
 				} else {
 					value = -negamax(board, hashmap, depth-1, -alpha-1, -alpha)
 					if value > alpha {
 						value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-						hashmap.Put(depth-1, value, board)
 					}
 				}
 			}
@@ -51,6 +50,7 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 		unapplyFunc()
 
 		if value >= beta {
+			hashmap.Put(depth, beta, board)
 			return beta
 		}
 		if value > alpha {
@@ -59,6 +59,7 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 		}
 
 	}
+	hashmap.Put(depth, alpha, board)
 	return alpha
 }
 

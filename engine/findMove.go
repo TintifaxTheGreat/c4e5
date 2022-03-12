@@ -2,6 +2,7 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
+	"log"
 	"sort"
 )
 
@@ -19,6 +20,9 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	alpha := minInt
 	beta := maxInt
 
+	cacheMiss = 0
+	cacheHit = 0
+
 	var bestMove dragontoothmg.Move = 0
 	//var sortedMoves []dragontoothmg.Move TODO
 
@@ -27,9 +31,19 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		priorValues := make(map[dragontoothmg.Move]int)
 
-		for _, move := range moves {
+		for i, move := range moves {
+			if i > pruneWorseIndex(curDepth) {
+				continue
+			}
+
 			unapplyFunc := g.Board.Apply(move)
-			priorValues[move] = -negamax(&g.Board, hashmap, curDepth, -beta, -alpha)
+			v, ok := hashmap.Get(curDepth, &g.Board)
+
+			if ok {
+				priorValues[move] = -v
+			} else {
+				priorValues[move] = -negamax(&g.Board, hashmap, curDepth, -beta, -alpha)
+			}
 			unapplyFunc()
 		}
 
@@ -43,12 +57,30 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		bestMove = sortedMoves[0]
 		moves = sortedMoves
-		curDepth += 2 // TODO think about this
+		curDepth++
 	}
 
 	if bestMove == 0 {
 		panic("no move found")
 	}
+
+	log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
 	return bestMove
 
+}
+func pruneWorseIndex(depth int) int {
+	switch depth {
+	case 0:
+		return 9999
+	case 1:
+		return 9999
+	case 2:
+		return 9999
+	case 3:
+		return 8
+	case 4:
+		return 8
+	default:
+		return 4
+	}
 }

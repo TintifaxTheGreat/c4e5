@@ -10,6 +10,9 @@ type Hash struct {
 	white bool
 }
 
+var cacheHit int
+var cacheMiss int
+
 type HashMap map[uint64]*Hash
 
 func NewHashMap() *HashMap {
@@ -18,9 +21,13 @@ func NewHashMap() *HashMap {
 }
 func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board) {
 	key := b.Hash()
-	h[key] = &Hash{
-		depth: depth,
-		value: value,
+	hash, ok := h[key]
+
+	if !ok || (hash.depth <= depth) {
+		h[key] = &Hash{
+			depth: depth,
+			value: value,
+		}
 	}
 }
 
@@ -32,8 +39,10 @@ func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, bool) {
 		ok = false
 	}
 	if ok {
+		cacheHit++
 		v := hash.value
 		return v, true
 	}
+	cacheMiss++
 	return 0, false
 }

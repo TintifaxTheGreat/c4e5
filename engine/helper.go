@@ -23,3 +23,9 @@ func fileFill(p uint64) uint64 {
 func OpenFiles(b *dragontoothmg.Board) uint64 {
 	return ^fileFill(b.White.Pawns) & ^fileFill(b.Black.Pawns)
 }
+
+func HalfOpenFiles(b *dragontoothmg.Board) uint64 {
+	fw := fileFill(b.White.Pawns)
+	fb := fileFill(b.Black.Pawns)
+	return (fw & ^fb) | (^fw & fb)
+}
