@@ -7,7 +7,7 @@ import (
 type Hash struct {
 	depth int
 	value int
-	white bool
+	move  dragontoothmg.Move
 }
 
 var cacheHit int
@@ -19,7 +19,7 @@ func NewHashMap() *HashMap {
 	m := make(HashMap)
 	return &m
 }
-func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board) {
+func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board, m dragontoothmg.Move) {
 	key := b.Hash()
 	hash, ok := h[key]
 
@@ -27,22 +27,23 @@ func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board) {
 		h[key] = &Hash{
 			depth: depth,
 			value: value,
+			move:  m,
 		}
 	}
 }
 
-func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, bool) {
+func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, dragontoothmg.Move, bool) {
 	key := b.Hash()
 	hash, ok := h[key]
 
-	if ok && (hash.depth < depth) {
-		ok = false
-	}
 	if ok {
+		if hash.depth < depth {
+			cacheMiss++
+			return 0, hash.move, false
+		}
 		cacheHit++
-		v := hash.value
-		return v, true
+		return hash.value, hash.move, true
 	}
 	cacheMiss++
-	return 0, false
+	return 0, 0, false
 }
