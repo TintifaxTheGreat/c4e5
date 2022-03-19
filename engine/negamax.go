@@ -4,9 +4,8 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int, beta int, unsorted bool) (int, dragontoothmg.Move) {
+func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, alpha, beta int, unsorted bool) (int, dragontoothmg.Move) {
 	v, priorBestMove, ok := hashmap.Get(depth, board)
-	//ok = false //TODO
 	if ok {
 		return v, priorBestMove
 	}
@@ -15,10 +14,10 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 	if len(children) == 0 {
 		if board.OurKingInCheck() == true {
 			value := -40000 - depth
-			hashmap.Put(999, value, board, 0)
+			hashmap.Put(maxInt, value, board, 0)
 			return value, 0
 		}
-		hashmap.Put(999, 0, board, 0)
+		hashmap.Put(maxInt, 0, board, 0)
 		return 0, 0
 	}
 
@@ -45,26 +44,27 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 		var valueMove dragontoothmg.Move = 0
 
 		isCapture := testCapture(child, board)
-
 		unapplyFunc := board.Apply(child)
-
-		if (depth == 1) && isCapture {
-			value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
+		var newDepth int
+		if isCapture && (quietDepth > 0) {
+			quietDepth--
+			newDepth = depth
 		} else {
-			if pvs {
-				value, valueMove = negamax(board, hashmap, depth-1, -beta, -alpha, true)
-				value *= -1
-
-			} else {
-				value, valueMove = negamax(board, hashmap, depth-1, -alpha-1, -alpha, true)
-				value *= -1
-				if value > alpha {
-					value, valueMove = negamax(board, hashmap, depth-1, -beta, -alpha, true)
-					value *= -1
-				}
-			}
+			newDepth = depth - 1
 		}
 
+		if pvs {
+			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+			value *= -1
+
+		} else {
+			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -alpha-1, -alpha, true)
+			value *= -1
+			if value > alpha {
+				value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+				value *= -1
+			}
+		}
 		unapplyFunc()
 
 		if value >= beta {
@@ -80,40 +80,6 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int,
 	}
 	hashmap.Put(depth-1, alpha, board, bestMove)
 	return alpha, bestMove
-}
-
-func quiescense(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
-	children := board.GenerateLegalMoves()
-	if len(children) == 0 {
-		return -40000 - depth
-		// TODO consider draws
-	}
-
-	staticValue := evaluate(board)
-
-	if depth < 1 {
-		return staticValue
-	}
-
-	var unapplyFunc func()
-	for _, child := range children {
-		value := 0
-		if testCapture(child, board) {
-			value = staticValue
-		} else {
-			unapplyFunc = board.Apply(child)
-			value = -evaluate(board)
-			unapplyFunc()
-		}
-
-		if value >= beta {
-			return beta
-		}
-		if value > alpha {
-			alpha = value
-		}
-	}
-	return alpha
 }
 
 // TODO from where is this snippet?

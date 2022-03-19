@@ -19,6 +19,9 @@ func NewHashMap() *HashMap {
 	m := make(HashMap)
 	return &m
 }
+
+// TODO consider hash entries w. higher depth and the effect of pruneWorseIndex
+
 func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board, m dragontoothmg.Move) {
 	key := b.Hash()
 	hash, ok := h[key]

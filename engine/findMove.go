@@ -31,7 +31,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		priorValues := make(map[dragontoothmg.Move]int)
 
 		for i, move := range moves {
-			if i > pruneWorseIndex(curDepth) {
+			if i > pruneWorseIndex(curDepth) { //TODO think about this
 				continue
 			}
 
@@ -41,7 +41,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			if ok {
 				priorValues[move] = -v
 			} else {
-				priorValues[move], _ = negamax(&g.Board, hashmap, curDepth, -beta, -alpha, false)
+				priorValues[move], _ = negamax(&g.Board, hashmap, curDepth, g.QuietDepth, -beta, -alpha, false)
 				priorValues[move] *= -1
 			}
 			unapplyFunc()
@@ -71,15 +71,15 @@ func (g *Game) FindMove() dragontoothmg.Move {
 func pruneWorseIndex(depth int) int {
 	switch depth {
 	case 0:
-		return 9999
+		return maxInt
 	case 1:
-		return 9999
+		return maxInt
 	case 2:
-		return 9999
+		return maxInt
 	case 3:
-		return 8
+		return maxInt
 	case 4:
-		return 8
+		return 16
 	default:
 		return 4
 	}
