@@ -4,96 +4,82 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth int, alpha int, beta int) int {
+func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, alpha, beta int, unsorted bool) (int, dragontoothmg.Move) {
+	v, priorBestMove, ok := hashmap.Get(depth, board)
+	if ok {
+		return v, priorBestMove
+	}
+
 	children := board.GenerateLegalMoves()
 	if len(children) == 0 {
 		if board.OurKingInCheck() == true {
 			value := -40000 - depth
-			hashmap.Put(depth, value, board)
-			return value
+			hashmap.Put(maxInt, value, board, 0)
+			return value, 0
 		}
-		hashmap.Put(depth, 0, board)
-		return 0
+		hashmap.Put(maxInt, 0, board, 0)
+		return 0, 0
 	}
 
 	if depth < 1 {
 		value := evaluate(board)
-		hashmap.Put(0, value, board)
-		return value
+		hashmap.Put(0, value, board, 0)
+		return value, 0
 	}
+
+	if unsorted && (priorBestMove != 0) {
+		for i, child := range children {
+			if child == priorBestMove {
+				children[i] = children[0]
+				children[0] = priorBestMove
+			}
+		}
+	}
+
+	var bestMove dragontoothmg.Move = 0
 
 	pvs := true
 	for _, child := range children {
 		value := 0
+		var valueMove dragontoothmg.Move = 0
+
 		isCapture := testCapture(child, board)
-
 		unapplyFunc := board.Apply(child)
-		v, ok := hashmap.Get(depth, board)
-
-		if ok {
-			value = -v
+		var newDepth int
+		if isCapture && (quietDepth > 0) {
+			quietDepth--
+			newDepth = depth
 		} else {
-			if (depth == 1) && isCapture {
-				value = -quiescense(board, depth-1+initQuietDepth, -beta, -alpha)
-			} else {
-				if pvs {
-					value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-					hashmap.Put(depth-1, value, board)
-				} else {
-					value = -negamax(board, hashmap, depth-1, -alpha-1, -alpha)
-					if value > alpha {
-						value = -negamax(board, hashmap, depth-1, -beta, -alpha)
-						hashmap.Put(depth-1, value, board)
-					}
-				}
+			newDepth = depth - 1
+		}
+
+		if pvs {
+			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+			value *= -1
+
+		} else {
+			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -alpha-1, -alpha, true)
+			value *= -1
+			if value > alpha {
+				value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+				value *= -1
 			}
 		}
 		unapplyFunc()
 
 		if value >= beta {
-			return beta
+			hashmap.Put(depth-1, beta, board, bestMove)
+			return beta, bestMove
 		}
 		if value > alpha {
 			alpha = value
+			bestMove = valueMove
 			pvs = false
 		}
 
 	}
-	return alpha
-}
-
-func quiescense(board *dragontoothmg.Board, depth int, alpha int, beta int) int {
-	children := board.GenerateLegalMoves()
-	if len(children) == 0 {
-		return -40000 - depth
-		// TODO consider draws
-	}
-
-	staticValue := evaluate(board)
-
-	if depth < 1 {
-		return staticValue
-	}
-
-	var unapplyFunc func()
-	for _, child := range children {
-		value := 0
-		if testCapture(child, board) {
-			value = staticValue
-		} else {
-			unapplyFunc = board.Apply(child)
-			value = -evaluate(board)
-			unapplyFunc()
-		}
-
-		if value >= beta {
-			return beta
-		}
-		if value > alpha {
-			alpha = value
-		}
-	}
-	return alpha
+	hashmap.Put(depth-1, alpha, board, bestMove)
+	return alpha, bestMove
 }
 
 // TODO from where is this snippet?
