@@ -2,8 +2,9 @@ package engine
 
 import "github.com/dylhunn/dragontoothmg"
 
-const initDepth = 5
+const initDepth = 99
 const initQuietDepth = 2
+const maxTime = 10000 // in milliseconds
 
 type Game struct {
 	Depth      int

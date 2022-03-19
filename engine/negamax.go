@@ -4,26 +4,30 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, alpha, beta int, unsorted bool) (int, dragontoothmg.Move) {
-	v, priorBestMove, ok := hashmap.Get(depth, board)
+func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, unsorted bool) (int, dragontoothmg.Move) {
+	v, priorBestMove, ok := hashmap.Get(depth, &g.Board)
 	if ok {
 		return v, priorBestMove
 	}
 
-	children := board.GenerateLegalMoves()
+	children := g.Board.GenerateLegalMoves()
 	if len(children) == 0 {
-		if board.OurKingInCheck() == true {
+		if g.Board.OurKingInCheck() == true {
 			value := -40000 - depth
-			hashmap.Put(maxInt, value, board, 0)
+			hashmap.Put(maxInt, value, &g.Board, 0)
 			return value, 0
 		}
-		hashmap.Put(maxInt, 0, board, 0)
+		hashmap.Put(maxInt, 0, &g.Board, 0)
+		return 0, 0
+	}
+
+	if !g.Playing {
 		return 0, 0
 	}
 
 	if depth < 1 {
-		value := evaluate(board)
-		hashmap.Put(0, value, board, 0)
+		value := evaluate(&g.Board)
+		hashmap.Put(0, value, &g.Board, 0)
 		return value, 0
 	}
 
@@ -43,8 +47,8 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, al
 		value := 0
 		var valueMove dragontoothmg.Move = 0
 
-		isCapture := testCapture(child, board)
-		unapplyFunc := board.Apply(child)
+		isCapture := testCapture(child, &g.Board)
+		unapplyFunc := g.Board.Apply(child)
 		var newDepth int
 		if isCapture && (quietDepth > 0) {
 			quietDepth--
@@ -54,21 +58,21 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, al
 		}
 
 		if pvs {
-			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+			value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -beta, -alpha, true)
 			value *= -1
 
 		} else {
-			value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -alpha-1, -alpha, true)
+			value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -alpha-1, -alpha, true)
 			value *= -1
 			if value > alpha {
-				value, valueMove = negamax(board, hashmap, newDepth, quietDepth, -beta, -alpha, true)
+				value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -beta, -alpha, true)
 				value *= -1
 			}
 		}
 		unapplyFunc()
 
 		if value >= beta {
-			hashmap.Put(depth-1, beta, board, bestMove)
+			hashmap.Put(depth-1, beta, &g.Board, bestMove)
 			return beta, bestMove
 		}
 		if value > alpha {
@@ -76,9 +80,8 @@ func negamax(board *dragontoothmg.Board, hashmap *HashMap, depth, quietDepth, al
 			bestMove = valueMove
 			pvs = false
 		}
-
 	}
-	hashmap.Put(depth-1, alpha, board, bestMove)
+	hashmap.Put(depth-1, alpha, &g.Board, bestMove)
 	return alpha, bestMove
 }
 

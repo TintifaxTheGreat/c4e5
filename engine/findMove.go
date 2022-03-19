@@ -41,7 +41,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			if ok {
 				priorValues[move] = -v
 			} else {
-				priorValues[move], _ = negamax(&g.Board, hashmap, curDepth, g.QuietDepth, -beta, -alpha, false)
+				priorValues[move], _ = g.negamax(hashmap, curDepth, g.QuietDepth, -beta, -alpha, false)
 				priorValues[move] *= -1
 			}
 			unapplyFunc()
@@ -54,6 +54,10 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		sort.Slice(sortedMoves, func(i, j int) bool {
 			return priorValues[sortedMoves[i]] > priorValues[sortedMoves[j]]
 		})
+
+		if !g.Playing {
+			break
+		}
 
 		bestMove = sortedMoves[0]
 		moves = sortedMoves
