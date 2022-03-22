@@ -6,7 +6,7 @@ import (
 )
 
 var gocmd = func(c *ishell.Context) {
-	timer := time.NewTimer(10000 * time.Millisecond)
+	timer := time.NewTimer(game.MoveTime)
 	go func() {
 		<-timer.C
 		game.Playing = false

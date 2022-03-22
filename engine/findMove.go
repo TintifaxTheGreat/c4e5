@@ -31,9 +31,12 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		priorValues := make(map[dragontoothmg.Move]int)
 
 		for i, move := range moves {
-			if i > pruneWorseIndex(curDepth) { //TODO think about this
-				continue
-			}
+			/*
+				if i > pruneWorseIndex(curDepth) { //TODO think about this
+					continue
+				}
+
+			*/
 
 			unapplyFunc := g.Board.Apply(move)
 			v, _, ok := hashmap.Get(curDepth, &g.Board)
@@ -45,6 +48,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 				priorValues[move] *= -1
 			}
 			unapplyFunc()
+			priorValues[move] -= i // TODO is this wise?
 		}
 
 		sortedMoves := make([]dragontoothmg.Move, 0, len(priorValues))
@@ -52,7 +56,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			sortedMoves = append(sortedMoves, key)
 		}
 		sort.Slice(sortedMoves, func(i, j int) bool {
-			return priorValues[sortedMoves[i]] > priorValues[sortedMoves[j]]
+			return priorValues[sortedMoves[i]] >= priorValues[sortedMoves[j]]
 		})
 
 		if !g.Playing {
@@ -60,7 +64,20 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		}
 
 		bestMove = sortedMoves[0]
+
+		if priorValues[bestMove] > mateLevel {
+			break
+		}
+
 		moves = sortedMoves
+
+		log.Print("\nDepth: ", curDepth)
+		/*
+			for _, m := range moves {
+				log.Print(m.String(), " ", priorValues[m])
+			}
+		*/
+
 		curDepth++
 	}
 

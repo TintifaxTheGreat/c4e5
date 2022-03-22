@@ -26,7 +26,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 	}
 
 	if depth < 1 {
-		value := evaluate(&g.Board)
+		value := evaluate(&g.Board, depth)
 		hashmap.Put(0, value, &g.Board, 0)
 		return value, 0
 	}
@@ -44,6 +44,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 
 	pvs := true
 	for _, child := range children {
+
 		value := 0
 		var valueMove dragontoothmg.Move = 0
 
@@ -69,6 +70,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 				value *= -1
 			}
 		}
+
 		unapplyFunc()
 
 		if value >= beta {
