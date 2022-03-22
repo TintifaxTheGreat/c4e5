@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const initQuietDepth = 2
+const initQuietDepth = 0
 const maxDepth = 99
 const defaultTime = 10000 * time.Millisecond
 const mateLevel = 35000
