@@ -4,7 +4,7 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, unsorted bool) (int, dragontoothmg.Move) {
+func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQuiescence bool) (int, dragontoothmg.Move) {
 	v, priorBestMove, ok := hashmap.Get(depth, &g.Board)
 	if ok {
 		return v, priorBestMove
@@ -31,7 +31,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 		return value, 0
 	}
 
-	if unsorted && (priorBestMove != 0) {
+	if unsorted && (priorBestMove != 0) { // TODO this should be more efficient
 		for i, child := range children {
 			if child == priorBestMove {
 				children[i] = children[0]
@@ -49,24 +49,25 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 		var valueMove dragontoothmg.Move = 0
 
 		isCapture := testCapture(child, &g.Board)
+
 		unapplyFunc := g.Board.Apply(child)
 		var newDepth int
-		if isCapture && (quietDepth > 0) {
-			quietDepth--
-			newDepth = depth
+		if depth == 1 && isCapture && !isQuiescence {
+			isQuiescence = true
+			newDepth = depth + g.QuietDepth - 1
 		} else {
 			newDepth = depth - 1
 		}
 
 		if pvs {
-			value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -beta, -alpha, true)
+			value, valueMove = g.negamax(hashmap, newDepth, -beta, -alpha, true, isQuiescence)
 			value *= -1
 
 		} else {
-			value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -alpha-1, -alpha, true)
+			value, valueMove = g.negamax(hashmap, newDepth, -alpha-1, -alpha, true, isQuiescence)
 			value *= -1
 			if value > alpha {
-				value, valueMove = g.negamax(hashmap, newDepth, quietDepth, -beta, -alpha, true)
+				value, valueMove = g.negamax(hashmap, newDepth, -beta, -alpha, true, isQuiescence)
 				value *= -1
 			}
 		}
@@ -74,7 +75,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, quietDepth, alpha, beta int, uns
 		unapplyFunc()
 
 		if value >= beta {
-			hashmap.Put(depth-1, beta, &g.Board, bestMove)
+			//hashmap.Put(depth-1, beta, &g.Board, bestMove)
 			return beta, bestMove
 		}
 		if value > alpha {

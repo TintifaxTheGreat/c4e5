@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const initQuietDepth = 0
+const initQuietDepth = 1 // TODO was 2
 const maxDepth = 99
 const defaultTime = 10000 * time.Millisecond
 const mateLevel = 35000
@@ -18,7 +18,7 @@ type Game struct {
 	MoveTime   time.Duration
 }
 
-func NewGame(fen string, depth int, moveTime time.Duration) *Game {
+func NewGame(fen string, depth, quietDepth int, moveTime time.Duration) *Game {
 	if fen == "" {
 		fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 	}
@@ -29,6 +29,10 @@ func NewGame(fen string, depth int, moveTime time.Duration) *Game {
 
 	if depth == 0 {
 		depth = maxDepth
+	}
+
+	if quietDepth == 0 {
+		quietDepth = initQuietDepth
 	}
 
 	return &Game{

@@ -23,8 +23,8 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 2
 	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 2
 
-	value += bits.OnesCount64(b.White.Pawns) * 20
-	value -= bits.OnesCount64(b.Black.Pawns) * 20
+	value += bits.OnesCount64(b.White.Pawns) * 30
+	value -= bits.OnesCount64(b.Black.Pawns) * 30
 
 	value += bits.OnesCount64(b.White.Knights) * 60
 	value -= bits.OnesCount64(b.Black.Knights) * 60

@@ -8,7 +8,7 @@ import (
 var game *engine.Game
 
 func Execute() {
-	game = engine.NewGame("", 0, 0)
+	game = engine.NewGame("", 0, 0, 0)
 
 	var shell *ishell.Shell
 	shell = ishell.New()
