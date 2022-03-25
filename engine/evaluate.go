@@ -73,13 +73,17 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	if piecesCount < 8 {
 		if value < 0 {
 			value += distance(b.White.Kings, b.Black.Kings) * 2
-			value += countFiguresMoves(b, bbDefendingKing) * 2
-			value -= bits.OnesCount64(bbDefendingKing&cbCenter) * 4 //TODO
+			value += countFiguresMoves(b, bbDefendingKing)
+			value += bits.OnesCount64(bbDefendingKing&cbCenter0) * 8
+			value += bits.OnesCount64(bbDefendingKing&cbCenter1) * 4
+			value += bits.OnesCount64(bbDefendingKing & cbBoard1)
 			value -= bits.OnesCount64(bbDefendingKing&cbBoard0) * 5
 		} else {
 			value -= distance(b.White.Kings, b.Black.Kings) * 2
-			value -= countFiguresMoves(b, bbDefendingKing) * 2
-			value += bits.OnesCount64(bbDefendingKing&cbCenter) * 4
+			value -= countFiguresMoves(b, bbDefendingKing)
+			value -= bits.OnesCount64(bbDefendingKing&cbCenter0) * 8
+			value -= bits.OnesCount64(bbDefendingKing&cbCenter1) * 4
+			value -= bits.OnesCount64(bbDefendingKing & cbBoard1)
 			value += bits.OnesCount64(bbDefendingKing&cbBoard0) * 5
 		}
 	}

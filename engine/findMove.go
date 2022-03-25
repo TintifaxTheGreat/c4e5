@@ -8,6 +8,7 @@ import (
 
 const maxInt int = 1000000
 const minInt int = -1000000
+const pruneThreshold int = 15 // TODO 15
 
 func (g *Game) FindMove() dragontoothmg.Move {
 	hashmap := NewHashMap() // TODO think if this is wise
@@ -67,7 +68,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		cutIndex := len(sortedMoves)
 		if curDepth > 3 {
 			for i, move := range sortedMoves {
-				if priorValues[move] < bestValue-30 {
+				if priorValues[move] < bestValue-pruneThreshold {
 					cutIndex = i
 					break
 				}
