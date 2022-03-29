@@ -70,3 +70,8 @@ func distance(x uint64, y uint64) int {
 	}
 	return rD
 }
+
+func GenerateMovesPrime(b *dragontoothmg.Board) []dragontoothmg.Move {
+	moves := b.GenerateLegalMoves()
+	return moves
+}

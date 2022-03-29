@@ -12,16 +12,18 @@ const cbCenter1 uint64 = 0x00003c24243c0000
 const cbCenter0 uint64 = 0x0000001818000000
 const cbSafeKing uint64 = 0xc3000000000000c3
 const cbGoodBishop uint64 = 0x42006666004200
+const cbGoodQueen uint64 = 0x3c1800000000183c
 
 //const cbGoodPawn uint64 = 0x1c1c000000
 const cbBaseLine uint64 = 0xff000000000000ff
 
 func evaluate(b *dragontoothmg.Board, depth int) int {
 	var value int = 0
+	movesCount := b.Fullmoveno
 	piecesCount := bits.OnesCount64(b.White.All | b.Black.All)
 
-	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 2
-	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 2
+	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 3
+	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 3
 
 	value += bits.OnesCount64(b.White.Pawns) * 30
 	value -= bits.OnesCount64(b.Black.Pawns) * 30
@@ -46,6 +48,12 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 
 	value -= bits.OnesCount64(b.White.Knights&cbBoard0) * 2
 	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 2
+
+	if movesCount < 12 {
+		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 12 // TODO was 8
+		value -= bits.OnesCount64(b.Black.Queens&cbGoodQueen) * 12
+
+	}
 
 	if piecesCount > 20 {
 		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 3

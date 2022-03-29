@@ -31,7 +31,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 		return value, 0
 	}
 
-	if unsorted && (priorBestMove != 0) { // TODO this should be more efficient
+	if unsorted && (priorBestMove != 0) {
 		for i, child := range children {
 			if child == priorBestMove {
 				children[i] = children[0]

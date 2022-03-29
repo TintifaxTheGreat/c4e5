@@ -8,7 +8,7 @@ import (
 
 const maxInt int = 1000000
 const minInt int = -1000000
-const pruneThreshold int = 15 // TODO 15
+const pruneThreshold int = 10 // TODO 15
 
 func (g *Game) FindMove() dragontoothmg.Move {
 	hashmap := NewHashMap() // TODO think if this is wise
@@ -92,7 +92,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		panic("no move found")
 	}
 
-	log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
+	//log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
 	return bestMove
 
 }
