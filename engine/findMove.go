@@ -8,6 +8,7 @@ import (
 
 const maxInt int = 1000000
 const minInt int = -1000000
+const pruneThreshold int = 10 // TODO 15
 
 func (g *Game) FindMove() dragontoothmg.Move {
 	hashmap := NewHashMap() // TODO think if this is wise
@@ -31,9 +32,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		priorValues := make(map[dragontoothmg.Move]int)
 
 		for i, move := range moves {
-			if i > pruneWorseIndex(curDepth) { //TODO think about this
-				continue
-			}
 
 			unapplyFunc := g.Board.Apply(move)
 			v, _, ok := hashmap.Get(curDepth, &g.Board)
@@ -41,10 +39,11 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			if ok {
 				priorValues[move] = -v
 			} else {
-				priorValues[move], _ = negamax(&g.Board, hashmap, curDepth, g.QuietDepth, -beta, -alpha, false)
+				priorValues[move], _ = g.negamax(hashmap, curDepth, -beta, -alpha, false, false)
 				priorValues[move] *= -1
 			}
 			unapplyFunc()
+			priorValues[move] -= i // TODO is this wise?
 		}
 
 		sortedMoves := make([]dragontoothmg.Move, 0, len(priorValues))
@@ -52,11 +51,40 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			sortedMoves = append(sortedMoves, key)
 		}
 		sort.Slice(sortedMoves, func(i, j int) bool {
-			return priorValues[sortedMoves[i]] > priorValues[sortedMoves[j]]
+			return priorValues[sortedMoves[i]] >= priorValues[sortedMoves[j]]
 		})
 
+		if !g.Playing {
+			break
+		}
+
 		bestMove = sortedMoves[0]
-		moves = sortedMoves
+		bestValue := priorValues[bestMove]
+
+		if bestValue > mateLevel {
+			break
+		}
+
+		cutIndex := len(sortedMoves)
+		if curDepth > 3 {
+			for i, move := range sortedMoves {
+				if priorValues[move] < bestValue-pruneThreshold {
+					cutIndex = i
+					break
+				}
+			}
+		}
+		moves = sortedMoves[:cutIndex]
+
+		log.Print("\nDepth: ", curDepth)
+
+		/*
+			for _, m := range moves {
+				log.Print(m.String(), " ", priorValues[m])
+			}
+
+
+		*/
 		curDepth++
 	}
 
@@ -64,7 +92,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		panic("no move found")
 	}
 
-	log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
+	//log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
 	return bestMove
 
 }
