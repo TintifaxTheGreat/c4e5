@@ -17,6 +17,22 @@ func main() {
 	log.Println("engine started")
 
 	cmd.Execute()
+	/*
+		start := time.Now()
+		d := 6
+		g := engine.NewGame("", 0, 0, 0)
+		n := engine.Perft(&g.Board, d)
+		duration := time.Since(start)
+		log.Print("Perft ", d, ": ", n)
+		log.Print("Duration: ", duration)
+
+		start = time.Now()
+		n = engine.PerftPrime(&g.Board, d)
+		duration = time.Since(start)
+		log.Print("PerftPrime ", d, ": ", n)
+		log.Print("Duration: ", duration)
+
+	*/
 }
 
 func openLogFile(path string) (*os.File, error) {

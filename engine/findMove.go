@@ -8,7 +8,7 @@ import (
 
 const maxInt int = 1000000
 const minInt int = -1000000
-const pruneThreshold int = 10 // TODO 15
+const pruneThreshold int = 8 // TODO 10
 
 func (g *Game) FindMove() dragontoothmg.Move {
 	hashmap := NewHashMap() // TODO think if this is wise
@@ -21,9 +21,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	alpha := minInt
 	beta := maxInt
 
-	cacheMiss = 0
-	cacheHit = 0
-
 	var bestMove dragontoothmg.Move = 0
 
 	curDepth := 0
@@ -32,7 +29,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		priorValues := make(map[dragontoothmg.Move]int)
 
 		for i, move := range moves {
-
 			unapplyFunc := g.Board.Apply(move)
 			v, _, ok := hashmap.Get(curDepth, &g.Board)
 
