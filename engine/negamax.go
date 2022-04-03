@@ -2,12 +2,18 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
+	"log"
 )
 
 func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQuiescence bool) (int, dragontoothmg.Move) {
 	v, priorBestMove, ok := hashmap.Get(depth, &g.Board)
 	if ok {
 		return v, priorBestMove
+	}
+
+	if g.TestBoardHistory() > 2 {
+		log.Print("detected draw by repetition")
+		return 0, 0
 	}
 
 	//children := g.Board.GenerateLegalMoves()

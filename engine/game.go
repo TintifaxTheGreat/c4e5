@@ -16,7 +16,7 @@ type Game struct {
 	Board        dragontoothmg.Board
 	Playing      bool
 	MoveTime     time.Duration
-	BoardHistory *BoardHistory
+	BoardHistory BoardHistory
 }
 
 func NewGame(fen string, depth, quietDepth int, moveTime time.Duration) *Game {
@@ -42,7 +42,7 @@ func NewGame(fen string, depth, quietDepth int, moveTime time.Duration) *Game {
 		Board:        dragontoothmg.ParseFen(fen),
 		Playing:      true,
 		MoveTime:     moveTime,
-		BoardHistory: NewBoardHistory(),
+		BoardHistory: *NewBoardHistory(),
 		//HashMap: NewHashMap(),
 	}
 }

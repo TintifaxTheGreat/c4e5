@@ -25,4 +25,5 @@ var position = func(c *ishell.Context) {
 	// TODO consider moves
 
 	game.Board = dragontoothmg.ParseFen(fen)
+	game.StoreBoardHistory()
 }

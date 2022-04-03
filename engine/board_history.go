@@ -1,27 +1,29 @@
 package engine
 
-import (
-	"github.com/dylhunn/dragontoothmg"
-)
-
-type BoardHistory map[uint64]bool
+type BoardHistory map[uint64]uint8
 
 func NewBoardHistory() *BoardHistory {
 	h := make(BoardHistory)
 	return &h
 }
 
-func (h BoardHistory) Store(b *dragontoothmg.Board) {
-	key := b.Hash()
-	_, ok := h[key]
-	
-	if !ok {
-		h[key] = true
+func (g *Game) StoreBoardHistory() {
+	key := g.Board.Hash()
+	_, ok := g.BoardHistory[key]
+
+	if ok {
+		g.BoardHistory[key]++
+	} else {
+		g.BoardHistory[key] = 1
 	}
 }
 
-func (h BoardHistory) Test(b *dragontoothmg.Board) bool {
-	key := b.Hash()
-	_, ok := h[key]
-	return ok
+func (g *Game) TestBoardHistory() uint8 {
+	key := g.Board.Hash()
+	v, ok := g.BoardHistory[key]
+
+	if ok {
+		return v
+	}
+	return 0
 }
