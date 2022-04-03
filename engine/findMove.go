@@ -92,19 +92,3 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	return bestMove
 
 }
-func pruneWorseIndex(depth int) int {
-	switch depth {
-	case 0:
-		return maxInt
-	case 1:
-		return maxInt
-	case 2:
-		return maxInt
-	case 3:
-		return maxInt
-	case 4:
-		return 16
-	default:
-		return 4
-	}
-}
