@@ -18,3 +18,20 @@ func Perft(board *dragontoothmg.Board, depth int) int {
 
 	return count
 }
+
+func PerftPrime(board *dragontoothmg.Board, depth int) int {
+	count := 0
+	moves := generateMovesPrime(board)
+
+	if depth == 1 {
+		return len(moves)
+	}
+
+	for _, move := range moves {
+		var unapply func() = board.Apply(move)
+		count += PerftPrime(board, depth-1)
+		unapply()
+	}
+
+	return count
+}

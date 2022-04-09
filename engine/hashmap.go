@@ -10,9 +10,6 @@ type Hash struct {
 	move  dragontoothmg.Move
 }
 
-var cacheHit int
-var cacheMiss int
-
 type HashMap map[uint64]*Hash
 
 func NewHashMap() *HashMap {
@@ -39,12 +36,9 @@ func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, dragontoothmg.Move
 
 	if ok {
 		if hash.depth < depth {
-			cacheMiss++
 			return 0, hash.move, false
 		}
-		cacheHit++
 		return hash.value, hash.move, true
 	}
-	cacheMiss++
 	return 0, 0, false
 }

@@ -13,5 +13,7 @@ var gocmd = func(c *ishell.Context) {
 	}()
 	game.Playing = true
 	move := game.FindMove()
+	game.Board.Apply(move)
+	game.StoreBoardHistory()
 	c.Println("bestmove", move.String())
 }

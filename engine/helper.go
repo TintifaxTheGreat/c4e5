@@ -71,7 +71,17 @@ func distance(x uint64, y uint64) int {
 	return rD
 }
 
-func GenerateMovesPrime(b *dragontoothmg.Board) []dragontoothmg.Move {
+func generateMovesPrime(b *dragontoothmg.Board) []dragontoothmg.Move {
+	var captures []dragontoothmg.Move
+	var nonCaptures []dragontoothmg.Move
 	moves := b.GenerateLegalMoves()
-	return moves
+	for _, m := range moves {
+		if dragontoothmg.IsCapture(m, b) {
+			captures = append(captures, m)
+		} else {
+			nonCaptures = append(nonCaptures, m)
+		}
+	}
+
+	return append(captures, nonCaptures...)
 }
