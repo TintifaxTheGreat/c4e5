@@ -22,54 +22,54 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	movesCount := b.Fullmoveno
 	piecesCount := bits.OnesCount64(b.White.All | b.Black.All)
 
-	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 3
-	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 3
+	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 30
+	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 30
 
-	value += bits.OnesCount64(b.White.Pawns) * 19
-	value -= bits.OnesCount64(b.Black.Pawns) * 20
+	value += bits.OnesCount64(b.White.Pawns) * 190
+	value -= bits.OnesCount64(b.Black.Pawns) * 200
 
-	value += bits.OnesCount64(b.White.Knights) * 59
-	value -= bits.OnesCount64(b.Black.Knights) * 60
+	value += bits.OnesCount64(b.White.Knights) * 590
+	value -= bits.OnesCount64(b.Black.Knights) * 600
 
-	value += bits.OnesCount64(b.White.Bishops) * 61
-	value -= bits.OnesCount64(b.Black.Bishops) * 62
+	value += bits.OnesCount64(b.White.Bishops) * 610
+	value -= bits.OnesCount64(b.Black.Bishops) * 620
 
-	value += bits.OnesCount64(b.White.Rooks) * 94
-	value -= bits.OnesCount64(b.Black.Rooks) * 95
+	value += bits.OnesCount64(b.White.Rooks) * 940
+	value -= bits.OnesCount64(b.Black.Rooks) * 950
 
-	value += bits.OnesCount64(b.White.Queens) * 179
-	value -= bits.OnesCount64(b.Black.Queens) * 180
+	value += bits.OnesCount64(b.White.Queens) * 1790
+	value -= bits.OnesCount64(b.Black.Queens) * 1800
 
-	value += bits.OnesCount64(b.White.Rooks&openFiles(b)) * 2
-	value -= bits.OnesCount64(b.Black.Rooks&openFiles(b)) * 2
+	value += bits.OnesCount64(b.White.Rooks&openFiles(b)) * 20
+	value -= bits.OnesCount64(b.Black.Rooks&openFiles(b)) * 20
 
-	value += bits.OnesCount64(b.White.Rooks & halfOpenFiles(b))
-	value -= bits.OnesCount64(b.Black.Rooks & halfOpenFiles(b))
+	value += bits.OnesCount64(b.White.Rooks&halfOpenFiles(b)) * 10
+	value -= bits.OnesCount64(b.Black.Rooks&halfOpenFiles(b)) * 10
 
-	value -= bits.OnesCount64(b.White.Knights&cbBoard0) * 2
-	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 2
+	value -= bits.OnesCount64(b.White.Knights&cbBoard0) * 20
+	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 20
 
 	if movesCount < 12 {
-		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 12 // TODO was 8
-		value -= bits.OnesCount64(b.Black.Queens&cbGoodQueen) * 12
+		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 120 // TODO was 8
+		value -= bits.OnesCount64(b.Black.Queens&cbGoodQueen) * 120
 
 	}
 
 	if piecesCount > 20 {
-		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 3
-		value += bits.OnesCount64(b.Black.Queens&cbCenter) * 3
+		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 30
+		value += bits.OnesCount64(b.Black.Queens&cbCenter) * 30
 
-		value -= bits.OnesCount64(b.White.Bishops&cbBaseLine) * 2
-		value += bits.OnesCount64(b.Black.Bishops&cbBaseLine) * 2
+		value -= bits.OnesCount64(b.White.Bishops&cbBaseLine) * 20
+		value += bits.OnesCount64(b.Black.Bishops&cbBaseLine) * 20
 
-		value -= bits.OnesCount64(b.White.Knights&cbBaseLine) * 2
-		value += bits.OnesCount64(b.Black.Knights&cbBaseLine) * 2
+		value -= bits.OnesCount64(b.White.Knights&cbBaseLine) * 20
+		value += bits.OnesCount64(b.Black.Knights&cbBaseLine) * 20
 
-		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 10
-		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 10
+		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 100
+		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 100
 
-		value += bits.OnesCount64(b.White.Bishops&cbGoodBishop) * 2
-		value -= bits.OnesCount64(b.Black.Bishops&cbGoodBishop) * 2
+		value += bits.OnesCount64(b.White.Bishops&cbGoodBishop) * 20
+		value -= bits.OnesCount64(b.Black.Bishops&cbGoodBishop) * 20
 	}
 
 	bbDefendingKing := b.White.Kings
@@ -80,19 +80,19 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 
 	if piecesCount < 8 {
 		if value < 0 {
-			value += distance(b.White.Kings, b.Black.Kings) * 2
-			value += countFiguresMoves(b, bbDefendingKing)
-			value += bits.OnesCount64(bbDefendingKing&cbCenter0) * 8
-			value += bits.OnesCount64(bbDefendingKing&cbCenter1) * 4
-			value += bits.OnesCount64(bbDefendingKing & cbBoard1)
-			value -= bits.OnesCount64(bbDefendingKing&cbBoard0) * 5
+			value += distance(b.White.Kings, b.Black.Kings) * 20
+			value += countFiguresMoves(b, bbDefendingKing) * 10
+			value += bits.OnesCount64(bbDefendingKing&cbCenter0) * 80
+			value += bits.OnesCount64(bbDefendingKing&cbCenter1) * 40
+			value += bits.OnesCount64(bbDefendingKing&cbBoard1) * 10
+			value -= bits.OnesCount64(bbDefendingKing&cbBoard0) * 50
 		} else {
-			value -= distance(b.White.Kings, b.Black.Kings) * 2
-			value -= countFiguresMoves(b, bbDefendingKing)
-			value -= bits.OnesCount64(bbDefendingKing&cbCenter0) * 8
-			value -= bits.OnesCount64(bbDefendingKing&cbCenter1) * 4
-			value -= bits.OnesCount64(bbDefendingKing & cbBoard1)
-			value += bits.OnesCount64(bbDefendingKing&cbBoard0) * 5
+			value -= distance(b.White.Kings, b.Black.Kings) * 20
+			value -= countFiguresMoves(b, bbDefendingKing) * 10
+			value -= bits.OnesCount64(bbDefendingKing&cbCenter0) * 80
+			value -= bits.OnesCount64(bbDefendingKing&cbCenter1) * 40
+			value -= bits.OnesCount64(bbDefendingKing&cbBoard1) * 10
+			value += bits.OnesCount64(bbDefendingKing&cbBoard0) * 50
 		}
 	}
 

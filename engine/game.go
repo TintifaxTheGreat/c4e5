@@ -8,7 +8,7 @@ import (
 const initQuietDepth = 1 // TODO 1
 const maxDepth = 99
 const defaultTime = 10000 * time.Millisecond // TODO was 10000
-const mateLevel = 35000
+const mateLevel = 55000
 
 type Game struct {
 	Depth        int

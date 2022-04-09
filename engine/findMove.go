@@ -8,7 +8,7 @@ import (
 
 const maxInt int = 1000000
 const minInt int = -1000000
-const pruneThreshold int = 8 // TODO 10
+const pruneThreshold int = 40 // TODO 40
 
 func (g *Game) FindMove() dragontoothmg.Move {
 	hashmap := NewHashMap() // TODO think if this is wise
@@ -39,7 +39,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 				priorValues[move] *= -1
 			}
 			unapplyFunc()
-			priorValues[move] -= i // TODO is this wise?
+			priorValues[move] -= i
 		}
 
 		sortedMoves := make([]dragontoothmg.Move, 0, len(priorValues))
@@ -66,6 +66,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 			for i, move := range sortedMoves {
 				if priorValues[move] < bestValue-pruneThreshold {
 					cutIndex = i
+					log.Print("cut at ", i)
 					break
 				}
 			}
