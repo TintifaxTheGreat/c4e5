@@ -2,7 +2,7 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
-	"math/bits"
+	"math/bits" // TODO think if this is wise
 )
 
 func evaluate(b *dragontoothmg.Board, depth int) int {
@@ -38,7 +38,7 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 20
 
 	if movesCount < 12 {
-		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 120 // TODO was 8
+		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 120
 		value -= bits.OnesCount64(b.Black.Queens&cbGoodQueen) * 120
 
 	}

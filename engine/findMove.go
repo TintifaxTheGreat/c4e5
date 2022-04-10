@@ -7,7 +7,7 @@ import (
 )
 
 func (g *Game) FindMove() dragontoothmg.Move {
-	hashmap := NewHashMap() // TODO think if this is wise
+	hashmap := NewHashMap()
 
 	moves := g.Board.GenerateLegalMoves()
 	if len(moves) == 1 {
