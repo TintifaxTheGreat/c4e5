@@ -10,6 +10,9 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	movesCount := b.Fullmoveno
 	piecesCount := bits.OnesCount64(b.White.All | b.Black.All)
 
+	bOpenFiles := openFiles(b)
+	bHalfOpenFiles := halfOpenFiles(b)
+
 	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 30
 	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 30
 
@@ -28,11 +31,11 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	value += bits.OnesCount64(b.White.Queens) * 1790
 	value -= bits.OnesCount64(b.Black.Queens) * 1800
 
-	value += bits.OnesCount64(b.White.Rooks&openFiles(b)) * 20
-	value -= bits.OnesCount64(b.Black.Rooks&openFiles(b)) * 20
+	value += bits.OnesCount64(b.White.Rooks&bOpenFiles) * 20
+	value -= bits.OnesCount64(b.Black.Rooks&bOpenFiles) * 20
 
-	value += bits.OnesCount64(b.White.Rooks&halfOpenFiles(b)) * 10
-	value -= bits.OnesCount64(b.Black.Rooks&halfOpenFiles(b)) * 10
+	value += bits.OnesCount64(b.White.Rooks&bHalfOpenFiles) * 10
+	value -= bits.OnesCount64(b.Black.Rooks&bHalfOpenFiles) * 10
 
 	value -= bits.OnesCount64(b.White.Knights&cbBoard0) * 20
 	value += bits.OnesCount64(b.Black.Knights&cbBoard0) * 20
@@ -40,7 +43,6 @@ func evaluate(b *dragontoothmg.Board, depth int) int {
 	if movesCount < 12 {
 		value += bits.OnesCount64(b.White.Queens&cbGoodQueen) * 120
 		value -= bits.OnesCount64(b.Black.Queens&cbGoodQueen) * 120
-
 	}
 
 	if piecesCount > 20 {
