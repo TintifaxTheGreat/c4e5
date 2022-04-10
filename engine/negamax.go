@@ -17,7 +17,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 	children := generateMovesPrime(&g.Board)
 	if len(children) == 0 {
 		if g.Board.OurKingInCheck() == true {
-			value := -60000 - depth
+			value := -mate - depth
 			hashmap.Put(maxInt, value, &g.Board, 0)
 			return value, 0
 		}

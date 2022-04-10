@@ -5,18 +5,6 @@ import (
 	"math/bits"
 )
 
-const cbCenter uint64 = 0x00003C3C3C3C0000
-const cbBoard0 uint64 = 0xff818181818181ff
-const cbBoard1 uint64 = 0x007e424242427e00
-const cbCenter1 uint64 = 0x00003c24243c0000
-const cbCenter0 uint64 = 0x0000001818000000
-const cbSafeKing uint64 = 0xc3000000000000c3
-const cbGoodBishop uint64 = 0x42006666004200
-const cbGoodQueen uint64 = 0x3c1800000000183c
-
-//const cbGoodPawn uint64 = 0x1c1c000000
-const cbBaseLine uint64 = 0xff000000000000ff
-
 func evaluate(b *dragontoothmg.Board, depth int) int {
 	var value int = 0
 	movesCount := b.Fullmoveno
