@@ -4,12 +4,6 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-type Hash struct {
-	depth int
-	value int
-	move  dragontoothmg.Move
-}
-
 type HashMap map[uint64]*Hash
 
 func NewHashMap() *HashMap {

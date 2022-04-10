@@ -6,12 +6,8 @@ import (
 	"sort"
 )
 
-const maxInt int = 1000000
-const minInt int = -1000000
-const pruneThreshold int = 40 // TODO 40
-
 func (g *Game) FindMove() dragontoothmg.Move {
-	hashmap := NewHashMap() // TODO think if this is wise
+	hashmap := NewHashMap()
 
 	moves := g.Board.GenerateLegalMoves()
 	if len(moves) == 1 {
@@ -62,7 +58,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		}
 
 		cutIndex := len(sortedMoves)
-		if curDepth > 3 {
+		if curDepth > latePruningDepth {
 			for i, move := range sortedMoves {
 				if priorValues[move] < bestValue-pruneThreshold {
 					cutIndex = i
