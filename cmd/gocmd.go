@@ -23,35 +23,35 @@ var gocmd = func(c *ishell.Context) {
 			value, commands = getNext(commands)
 			iValue, err := strconv.Atoi(value)
 			if err == nil {
-				timeManagement.tmWtime = iValue
+				timeManagement.wtime = iValue
 			}
 
 		case "btime":
 			value, commands = getNext(commands)
 			iValue, err := strconv.Atoi(value)
 			if err == nil {
-				timeManagement.tmBtime = iValue
+				timeManagement.btime = iValue
 			}
 
 		case "winc":
 			value, commands = getNext(commands)
 			iValue, err := strconv.Atoi(value)
 			if err == nil {
-				timeManagement.tmWinc = iValue
+				timeManagement.winc = iValue
 			}
 
 		case "binc":
 			value, commands = getNext(commands)
 			iValue, err := strconv.Atoi(value)
 			if err == nil {
-				timeManagement.tmBinc = iValue
+				timeManagement.binc = iValue
 			}
 
 		case "movestogo":
 			value, commands = getNext(commands)
 			iValue, err := strconv.Atoi(value)
 			if err == nil {
-				timeManagement.tmMovesToGo = iValue
+				timeManagement.movesToGo = iValue
 			}
 
 		case "depth":

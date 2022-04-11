@@ -4,7 +4,7 @@ Chess Engine
 
 Todo
 * Penalty for moving same piece a lot of times
-* time management - overall time per n moves
+* Show move in consideration
 * Avoid move repetition - consider draw by repetition
 * Opposition in pawn endgames
 
