@@ -57,18 +57,17 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 		unapplyFunc := g.Board.Apply(child)
 		var newDepth int
 
-		/*
-			if !unsorted && pvs {
-				newDepth += 2 // TODO think about this
-			} else {
-		*/
-		if depth == 1 && isCapture && !isQuiescence {
-			isQuiescence = true
-			newDepth = depth + g.QuietDepth - 1
+		if !unsorted && pvs {
+			newDepth += pvsDepth
 		} else {
-			newDepth = depth - 1
+
+			if depth == 1 && isCapture && !isQuiescence {
+				isQuiescence = true
+				newDepth = depth + g.QuietDepth - 1
+			} else {
+				newDepth = depth - 1
+			}
 		}
-		//}
 
 		if pvs {
 			value, valueMove = g.negamax(hashmap, newDepth, -beta, -alpha, true, isQuiescence)
