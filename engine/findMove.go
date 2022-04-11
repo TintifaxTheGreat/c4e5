@@ -20,7 +20,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	var bestMove dragontoothmg.Move = 0
 
 	curDepth := 0
-	for curDepth <= g.Depth {
+	for curDepth <= g.MaxDepth {
 
 		priorValues := make(map[dragontoothmg.Move]int)
 

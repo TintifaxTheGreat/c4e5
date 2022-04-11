@@ -63,7 +63,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 
 			if depth == 1 && isCapture && !isQuiescence {
 				isQuiescence = true
-				newDepth = depth + g.QuietDepth - 1
+				newDepth = depth + g.IncQuietDepth - 1
 			} else {
 				newDepth = depth - 1
 			}
