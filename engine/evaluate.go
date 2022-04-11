@@ -5,7 +5,7 @@ import (
 	"math/bits" // TODO think if this is wise
 )
 
-func evaluate(b *dragontoothmg.Board, depth int) int {
+func evaluate(b *dragontoothmg.Board) int {
 	var value int = 0
 	movesCount := b.Fullmoveno
 	piecesCount := bits.OnesCount64(b.White.All | b.Black.All)

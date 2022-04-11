@@ -30,7 +30,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 	}
 
 	if depth < 1 {
-		value := evaluate(&g.Board, depth)
+		value := evaluate(&g.Board)
 		hashmap.Put(0, value, &g.Board, 0)
 		return value, 0
 	}

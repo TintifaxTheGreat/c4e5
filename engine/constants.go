@@ -20,7 +20,7 @@ const (
 	maxInt           int = 1000000
 	minInt           int = -1000000
 	pruneThreshold   int = 40
-	maxDepth             = 99
+	initMaxDepth         = 99
 	initQuietDepth       = 1
 	pvsDepth             = 2
 	latePruningDepth     = 3

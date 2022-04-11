@@ -24,7 +24,7 @@ func NewGame(fen string, maxDepth, incQuietDepth int, moveTime time.Duration) *G
 	}
 
 	if maxDepth == 0 {
-		maxDepth = maxDepth
+		maxDepth = initMaxDepth
 	}
 
 	if incQuietDepth == 0 {
