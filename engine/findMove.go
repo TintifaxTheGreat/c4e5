@@ -60,7 +60,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		cutIndex := len(sortedMoves)
 		if curDepth > latePruningDepth {
 			for i, move := range sortedMoves {
-				if priorValues[move] < bestValue-pruneThreshold {
+				if priorValues[move] < bestValue-latePruningThreshold {
 					cutIndex = i
 					log.Print("cut at ", i)
 					break

@@ -13,8 +13,8 @@ func evaluate(b *dragontoothmg.Board) int {
 	bOpenFiles := openFiles(b)
 	bHalfOpenFiles := halfOpenFiles(b)
 
-	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 30
-	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 30
+	value += bits.OnesCount64(b.White.Pawns&cbCenter0) * 40
+	value -= bits.OnesCount64(b.Black.Pawns&cbCenter0) * 40
 
 	value += bits.OnesCount64(b.White.Pawns) * 190
 	value -= bits.OnesCount64(b.Black.Pawns) * 200
@@ -46,17 +46,17 @@ func evaluate(b *dragontoothmg.Board) int {
 	}
 
 	if piecesCount > 20 {
-		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 30
-		value += bits.OnesCount64(b.Black.Queens&cbCenter) * 30
+		value -= bits.OnesCount64(b.White.Queens&cbCenter) * 40
+		value += bits.OnesCount64(b.Black.Queens&cbCenter) * 40
 
-		value -= bits.OnesCount64(b.White.Bishops&cbBaseLine) * 20
-		value += bits.OnesCount64(b.Black.Bishops&cbBaseLine) * 20
+		value -= bits.OnesCount64(b.White.Bishops&cbBaseLine) * 30
+		value += bits.OnesCount64(b.Black.Bishops&cbBaseLine) * 30
 
-		value -= bits.OnesCount64(b.White.Knights&cbBaseLine) * 20
-		value += bits.OnesCount64(b.Black.Knights&cbBaseLine) * 20
+		value -= bits.OnesCount64(b.White.Knights&cbBaseLine) * 30
+		value += bits.OnesCount64(b.Black.Knights&cbBaseLine) * 30
 
-		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 100
-		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 100
+		value += bits.OnesCount64(b.White.Kings&cbSafeKing) * 130
+		value -= bits.OnesCount64(b.Black.Kings&cbSafeKing) * 130
 
 		value += bits.OnesCount64(b.White.Bishops&cbGoodBishop) * 20
 		value -= bits.OnesCount64(b.Black.Bishops&cbGoodBishop) * 20
