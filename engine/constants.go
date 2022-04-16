@@ -17,17 +17,18 @@ const (
 
 // Search
 const (
-	maxInt         int = 1000000
-	minInt         int = -1000000
-	pruneThreshold int = 40
+	maxInt               int = 1000000
+	minInt               int = -1000000
+	initMaxDepth             = 99
+	initQuietDepth           = 1
+	latePruningThreshold int = 60
+	latePruningDepth         = 3
+	pvsDepth                 = 2
 )
 
 // Game
 const (
-	initQuietDepth   = 1
-	maxDepth         = 99
-	latePruningDepth = 3
-	defaultTime      = 10000 * time.Millisecond
+	defaultTime = 10000 * time.Millisecond
 )
 
 // Evaluation

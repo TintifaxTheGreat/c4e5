@@ -20,7 +20,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 	var bestMove dragontoothmg.Move = 0
 
 	curDepth := 0
-	for curDepth <= g.Depth {
+	for curDepth <= g.MaxDepth {
 
 		priorValues := make(map[dragontoothmg.Move]int)
 
@@ -60,7 +60,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		cutIndex := len(sortedMoves)
 		if curDepth > latePruningDepth {
 			for i, move := range sortedMoves {
-				if priorValues[move] < bestValue-pruneThreshold {
+				if priorValues[move] < bestValue-latePruningThreshold {
 					cutIndex = i
 					log.Print("cut at ", i)
 					break
