@@ -17,13 +17,13 @@ const (
 
 // Search
 const (
-	maxInt               int = 1000000
-	minInt               int = -1000000
-	initMaxDepth             = 99
-	initQuietDepth           = 1
-	latePruningThreshold int = 60
-	latePruningDepth         = 3
-	pvsDepth                 = 2
+	maxInt               = 1000000
+	minInt               = -1000000
+	initMaxDepth         = 99
+	initQuietDepth       = 1
+	latePruningThreshold = 60
+	latePruningDepth     = 3
+	pvsDepth             = 2
 )
 
 // Game

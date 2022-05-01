@@ -97,9 +97,3 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 	hashmap.Put(depth-1, alpha, &g.Board, bestMove)
 	return alpha, bestMove
 }
-
-// TODO from where is this snippet?
-func testCapture(m dragontoothmg.Move, b *dragontoothmg.Board) bool {
-	toBitboard := (uint64(1) << m.To())
-	return (toBitboard&b.White.All != 0) || (toBitboard&b.Black.All != 0)
-}
