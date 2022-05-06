@@ -4,13 +4,13 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQuiescence bool) (int, dragontoothmg.Move) {
-	v, priorBestMove, ok := hashmap.Get(depth, &g.Board)
+func (g *Game) negamax(hashmap *hashMap, depth, alpha, beta int, unsorted, isQuiescence bool) (int, dragontoothmg.Move) {
+	v, priorBestMove, ok := hashmap.get(depth, &g.Board)
 	if ok {
 		return v, priorBestMove
 	}
 
-	if g.TestBoardHistory() > 2 {
+	if g.testBoardHistory() > 2 {
 		return 0, 0 // TODO improve this
 	}
 
@@ -18,10 +18,10 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 	if len(children) == 0 {
 		if g.Board.OurKingInCheck() == true {
 			value := -mate - depth
-			hashmap.Put(maxInt, value, &g.Board, 0)
+			hashmap.put(maxInt, value, &g.Board, 0)
 			return value, 0
 		}
-		hashmap.Put(maxInt, 0, &g.Board, 0)
+		hashmap.put(maxInt, 0, &g.Board, 0)
 		return 0, 0
 	}
 
@@ -31,7 +31,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 
 	if depth < 1 {
 		value := evaluate(&g.Board)
-		hashmap.Put(0, value, &g.Board, 0)
+		hashmap.put(0, value, &g.Board, 0)
 		return value, 0
 	}
 
@@ -63,7 +63,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 
 			if depth == 1 && isCapture && !isQuiescence {
 				isQuiescence = true
-				newDepth = depth + g.IncQuietDepth - 1
+				newDepth = depth + g.incQuietDepth - 1
 			} else {
 				newDepth = depth - 1
 			}
@@ -85,7 +85,7 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 		unapplyFunc()
 
 		if value >= beta {
-			//hashmap.Put(depth-1, beta, &g.Board, bestMove)
+			//hashmap.put(depth-1, beta, &g.Board, bestMove)
 			return beta, bestMove
 		}
 		if value > alpha {
@@ -94,12 +94,6 @@ func (g *Game) negamax(hashmap *HashMap, depth, alpha, beta int, unsorted, isQui
 			pvs = false
 		}
 	}
-	hashmap.Put(depth-1, alpha, &g.Board, bestMove)
+	hashmap.put(depth-1, alpha, &g.Board, bestMove)
 	return alpha, bestMove
-}
-
-// TODO from where is this snippet?
-func testCapture(m dragontoothmg.Move, b *dragontoothmg.Board) bool {
-	toBitboard := (uint64(1) << m.To())
-	return (toBitboard&b.White.All != 0) || (toBitboard&b.Black.All != 0)
 }

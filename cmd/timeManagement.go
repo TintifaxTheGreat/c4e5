@@ -20,10 +20,10 @@ func NewTimeManagement() *timeManagement {
 
 func (tm *timeManagement) SetGameTime(g *engine.Game) {
 	var timeForAllMoves int
-	var timeUsagePercent = 90
+	var timeUsagePercent = timeUsagePercentDefault
 
 	if tm.movesToGo == 0 {
-		tm.movesToGo = 40
+		tm.movesToGo = estimatedRestMoves
 	}
 
 	if g.Board.Wtomove {
@@ -32,8 +32,8 @@ func (tm *timeManagement) SetGameTime(g *engine.Game) {
 		timeForAllMoves = tm.btime + (tm.movesToGo-1)*tm.binc
 	}
 
-	if g.Board.Fullmoveno < 25 && tm.movesToGo > 20 {
-		timeUsagePercent = 200
+	if g.Board.Fullmoveno < earlyGameMaxMoves && tm.movesToGo > earlyGameMinRestMoves {
+		timeUsagePercent = timeUsagePercentEarlyGame
 	}
 
 	g.MoveTime = time.Duration((timeForAllMoves*timeUsagePercent)/(tm.movesToGo*100)) * time.Millisecond

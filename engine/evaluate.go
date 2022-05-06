@@ -2,7 +2,7 @@ package engine
 
 import (
 	"github.com/dylhunn/dragontoothmg"
-	"math/bits" // TODO think if this is wise
+	"math/bits"
 )
 
 func evaluate(b *dragontoothmg.Board) int {

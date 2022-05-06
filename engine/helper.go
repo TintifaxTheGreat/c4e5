@@ -85,3 +85,8 @@ func generateMovesPrime(b *dragontoothmg.Board) []dragontoothmg.Move {
 
 	return append(captures, nonCaptures...)
 }
+
+func testCapture(m dragontoothmg.Move, b *dragontoothmg.Board) bool {
+	bb := (uint64(1) << m.To())
+	return (bb&b.White.All != 0) || (bb&b.Black.All != 0)
+}

@@ -34,7 +34,10 @@ func Execute() {
 		Func: gocmd,
 	})
 
-	// TODO add quit
+	shell.AddCmd(&ishell.Cmd{
+		Name: "quit",
+		Func: quitcmd,
+	})
 
 	shell.Run()
 }

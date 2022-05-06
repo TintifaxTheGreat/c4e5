@@ -4,14 +4,14 @@ import (
 	"github.com/dylhunn/dragontoothmg"
 )
 
-type HashMap map[uint64]*Hash
+type hashMap map[uint64]*Hash
 
-func NewHashMap() *HashMap {
-	m := make(HashMap)
+func newHashMap() *hashMap {
+	m := make(hashMap)
 	return &m
 }
 
-func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board, m dragontoothmg.Move) {
+func (h hashMap) put(depth int, value int, b *dragontoothmg.Board, m dragontoothmg.Move) {
 	key := b.Hash()
 	hash, ok := h[key]
 
@@ -24,7 +24,7 @@ func (h HashMap) Put(depth int, value int, b *dragontoothmg.Board, m dragontooth
 	}
 }
 
-func (h HashMap) Get(depth int, b *dragontoothmg.Board) (int, dragontoothmg.Move, bool) {
+func (h hashMap) get(depth int, b *dragontoothmg.Board) (int, dragontoothmg.Move, bool) {
 	key := b.Hash()
 	hash, ok := h[key]
 
