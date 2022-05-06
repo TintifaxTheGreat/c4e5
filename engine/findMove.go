@@ -7,7 +7,7 @@ import (
 )
 
 func (g *Game) FindMove() dragontoothmg.Move {
-	hashmap := NewHashMap()
+	hashmap := newHashMap()
 
 	moves := g.Board.GenerateLegalMoves()
 	if len(moves) == 1 {
@@ -26,7 +26,7 @@ func (g *Game) FindMove() dragontoothmg.Move {
 
 		for i, move := range moves {
 			unapplyFunc := g.Board.Apply(move)
-			v, _, ok := hashmap.Get(curDepth, &g.Board)
+			v, _, ok := hashmap.get(curDepth, &g.Board)
 
 			if ok {
 				priorValues[move] = -v
@@ -70,14 +70,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		moves = sortedMoves[:cutIndex]
 
 		log.Print("\nDepth: ", curDepth)
-
-		/*
-			for _, m := range moves {
-				log.Print(m.String(), " ", priorValues[m])
-			}
-
-
-		*/
 		curDepth++
 	}
 
@@ -85,7 +77,6 @@ func (g *Game) FindMove() dragontoothmg.Move {
 		panic("no move found")
 	}
 
-	//log.Print(cacheHit, " ", cacheMiss, " ", float64(cacheHit)/float64(cacheMiss+cacheHit))
 	return bestMove
 
 }

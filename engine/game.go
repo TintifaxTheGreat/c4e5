@@ -7,11 +7,11 @@ import (
 
 type Game struct {
 	MaxDepth      int
-	IncQuietDepth int
+	incQuietDepth int
 	Board         dragontoothmg.Board
 	Playing       bool
 	MoveTime      time.Duration
-	BoardHistory  BoardHistory
+	boardHistory  boardHistory
 }
 
 func NewGame(fen string, maxDepth, incQuietDepth int, moveTime time.Duration) *Game {
@@ -33,10 +33,10 @@ func NewGame(fen string, maxDepth, incQuietDepth int, moveTime time.Duration) *G
 
 	return &Game{
 		MaxDepth:      maxDepth,
-		IncQuietDepth: initQuietDepth,
+		incQuietDepth: initQuietDepth,
 		Board:         dragontoothmg.ParseFen(fen),
 		Playing:       true,
 		MoveTime:      moveTime,
-		BoardHistory:  *NewBoardHistory(),
+		boardHistory:  *newBoardHistory(),
 	}
 }

@@ -3,25 +3,11 @@ package engine
 import (
 	"github.com/stretchr/testify/assert"
 	"log"
-	"os"
 	"testing"
 )
 
 func TestMakeMove(t *testing.T) {
-	file, err := openLogFile("/home/eugen/c4e5.log") //TODO make this configurable
-	if err != nil {
-		panic("cannot create logfile")
-	}
-	log.SetOutput(file)
 	log.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmicroseconds)
-
-	log.Println("unit tests started")
-	/*
-		g := NewGame("r1b1kb1r/p1p1qppp/2pp1n2/4P3/3P1B2/2N5/PPP1Q1PP/R3K1NR b - - 0 1", 4, 0, 0)
-		move := g.FindMove()
-		assert.Equal(t, "f6d5", move.String())
-
-	*/
 
 	log.Println("unit tests started")
 	g := NewGame("r1b2k1r/pppq3p/2np1p2/8/2B2B2/8/PPP3PP/4RR1K w - - 0 1", 4, 0, 0)
@@ -48,12 +34,4 @@ func TestMakeMove(t *testing.T) {
 	move = g.FindMove()
 	assert.Equal(t, "c4h4", move.String())
 
-}
-
-func openLogFile(path string) (*os.File, error) {
-	logFile, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	if err != nil {
-		return nil, err
-	}
-	return logFile, nil
 }

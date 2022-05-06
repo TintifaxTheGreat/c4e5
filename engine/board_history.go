@@ -1,26 +1,26 @@
 package engine
 
-type BoardHistory map[uint64]uint8
+type boardHistory map[uint64]uint8
 
-func NewBoardHistory() *BoardHistory {
-	h := make(BoardHistory)
+func newBoardHistory() *boardHistory {
+	h := make(boardHistory)
 	return &h
 }
 
 func (g *Game) StoreBoardHistory() {
 	key := g.Board.Hash()
-	_, ok := g.BoardHistory[key]
+	_, ok := g.boardHistory[key]
 
 	if ok {
-		g.BoardHistory[key]++
+		g.boardHistory[key]++
 	} else {
-		g.BoardHistory[key] = 1
+		g.boardHistory[key] = 1
 	}
 }
 
-func (g *Game) TestBoardHistory() uint8 {
+func (g *Game) testBoardHistory() uint8 {
 	key := g.Board.Hash()
-	v, ok := g.BoardHistory[key]
+	v, ok := g.boardHistory[key]
 
 	if ok {
 		return v
